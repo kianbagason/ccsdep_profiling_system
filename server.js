@@ -30,12 +30,20 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected successfully'))
-.catch((err) => console.error('MongoDB connection error:', err));
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('MongoDB connected successfully');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); // Exit process if database connection fails in production
+  }
+};
+
+connectDB();
 
 // Routes
 app.use('/api/students', require('./routes/students'));
@@ -87,8 +95,9 @@ app.use('*', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`CCS Profiling System server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
 module.exports = app;

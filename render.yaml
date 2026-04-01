@@ -1,8 +1,24 @@
-# Render Configuration
-web: npm start
+# Render Configuration for Backend API
+services:
+  - type: web
+    name: ccs-profiling-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
 
-# Environment Variables (to be set in Render dashboard)
-# NODE_ENV=production
-# PORT=10000 (Render provides this)
-# MONGODB_URI=your_mongodb_atlas_connection_string
-# CLIENT_URL=your_vercel_app_url
