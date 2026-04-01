@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd client && npm ci && npm run build",
+  "outputDirectory": "client/build",
+  "github": {
+    "silent": false,
+    "autoJobCancelation": true
+  }
+}
