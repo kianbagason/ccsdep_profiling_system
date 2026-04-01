@@ -1,7 +1,9 @@
 {
   "version": 2,
-  "installCommand": "cd client && npm install",
+  "env": {
+    "NODE_VERSION": "18"
+  },
+  "installCommand": "cd client && npm install --legacy-peer-deps",
   "buildCommand": "cd client && npm run build",
-  "outputDirectory": "client/build",
-  "framework": "create-react-app"
+  "outputDirectory": "client/build"
 }
