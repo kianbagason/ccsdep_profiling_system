@@ -11,6 +11,10 @@
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build"
   },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "keywords": ["ccs", "profiling", "system", "mongodb", "express", "react"],
   "author": "CCS Department - Pamantasan ng Cabuyao",
   "license": "MIT",
