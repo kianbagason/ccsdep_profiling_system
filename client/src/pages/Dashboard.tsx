@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
       });
       
       // Count unique skills
-      const uniqueSkills = [...new Set(allSkills)];
+      const uniqueSkills = Array.from(new Set(allSkills));
       
       // Get top skills (you might want to implement proper counting logic)
       const topSkills = [
