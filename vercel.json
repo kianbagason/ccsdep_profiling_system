@@ -1,7 +1,8 @@
 {
   "version": 2,
   "env": {
-    "NODE_VERSION": "18"
+    "NODE_VERSION": "18",
+    "NODE_OPTIONS": "--max-old-space-size=4096"
   },
   "installCommand": "cd client && npm install --legacy-peer-deps",
   "buildCommand": "cd client && npm run build",
