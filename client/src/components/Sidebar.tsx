@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     <>
       {/* Mobile menu button */}
       <button 
-        className="mobile-menu-btn"
+        className="mobile-menu-btn md:hidden"
         onClick={onToggle}
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         {/* Logo Section */}
         <div className="nav-logo">
           <div className="logo-icon">
-            <Target size={32} />
+            <Target size={32} color="rgb(252, 94, 3)" />
           </div>
           <div className="logo-text">
             <h2>CCS</h2>
@@ -57,33 +57,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 
         {/* Navigation Items */}
         <div className="nav-menu">
-          {menuItems.map((item) => (
-            <Link
-              key={item.id}
-              to={item.path}
-              onClick={() => onToggle()}
-              className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
-            >
-              <item.icon size={20} />
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.id}
+                to={item.path}
+                onClick={() => onToggle()}
+                className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+                title={!isOpen ? item.label : ''}
+              >
+                <Icon size={22} strokeWidth={location.pathname === item.path ? 2.5 : 2} />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Bottom Actions */}
-        <div className="nav-actions">
+        <div className="nav-actions" style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px' }}>
           <Link to="/settings" className="nav-item">
-            <Settings size={20} />
+            <Settings size={22} />
             <span>Settings</span>
           </Link>
           <Link to="/logout" className="nav-item logout">
-            <LogOut size={20} />
+            <LogOut size={22} />
             <span>Logout</span>
           </Link>
         </div>
 
-        {/* Status Indicator */}
-        <div className="nav-status">
+        {/* Status Indicator - Hidden by default, shown on hover */}
+        <div className="nav-status" style={{ display: 'none' }}>
           <div className="status-dot"></div>
           <span>System Online</span>
         </div>

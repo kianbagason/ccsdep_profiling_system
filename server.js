@@ -4,6 +4,10 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const dns = require('dns');
+
+// Use Google DNS for MongoDB Atlas SRV record resolution
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 dotenv.config();
 
@@ -32,13 +36,21 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // MongoDB connection
 const connectDB = async () => {
   try {
+    console.log('Connecting to MongoDB...');
+    console.log('Connection string type:', process.env.MONGODB_URI?.startsWith('mongodb+srv://') ? 'MongoDB Atlas (Cloud)' : 'Local/Custom MongoDB');
+    
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('MongoDB connected successfully');
+    
+    console.log('✅ MongoDB connected successfully');
+    console.log('   Database:', mongoose.connection.name);
+    console.log('   Host:', mongoose.connection.host || 'N/A (Atlas uses SRV records)');
+    console.log('   Connection type:', mongoose.connection.host ? 'Direct' : 'Atlas SRV');
   } catch (err) {
-    console.error('MongoDB connection error:', err);
+    console.error('❌ MongoDB connection error:', err.message);
+    console.error('Full error:', err);
     process.exit(1); // Exit process if database connection fails in production
   }
 };

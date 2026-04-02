@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Search, Filter, MapPin, Users, Clock, User, Tag } from 'lucide-react';
+import { Calendar, Search, Filter, MapPin, Users, Clock, User, Tag, Plus, Edit, Trash2 } from 'lucide-react';
 
 interface Event {
   _id: string;
@@ -66,6 +66,17 @@ const EventList: React.FC = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this event?')) {
+      try {
+        await fetch(`/api/events/${id}`, { method: 'DELETE' });
+        setEvents(events.filter(event => event._id !== id));
+      } catch (error) {
+        console.error('Error deleting event:', error);
+      }
+    }
+  };
+
   const filteredEvents = events.filter(event => {
     const matchesSearch = `${event.title} ${event.description} ${event.organizer.name}`.toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -113,8 +124,17 @@ const EventList: React.FC = () => {
   }
 
   return (
-    <div className="main-content">
-      <h1 className="text-3xl font-bold text-white mb-8">Events Management</h1>
+    <div className="main-content" style={{ maxHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-white">Events Management</h1>
+        <button
+          onClick={() => window.location.href = '/events/add'}
+          className="ccs-orange-btn flex items-center gap-2"
+        >
+          <Plus size={20} />
+          Add Event
+        </button>
+      </div>
       
       {/* Search and Filter */}
       <div className="clay-card p-6 mb-8">
@@ -236,11 +256,19 @@ const EventList: React.FC = () => {
             </div>
 
             <div className="mt-4 flex gap-2">
-              <button className="ccs-orange-btn text-sm px-4 py-2">
-                View Details
+              <button 
+                onClick={() => window.location.href = `/events/edit/${event._id}`}
+                className="p-2 bg-green-500 bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
+                title="Edit"
+              >
+                <Edit size={16} className="text-green-400" />
               </button>
-              <button className="clay-card text-sm px-4 py-2 text-gray-300 hover:text-white">
-                Register
+              <button 
+                onClick={() => handleDelete(event._id)}
+                className="p-2 bg-red-500 bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
+                title="Delete"
+              >
+                <Trash2 size={16} className="text-red-400" />
               </button>
             </div>
           </div>

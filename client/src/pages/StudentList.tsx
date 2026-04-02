@@ -72,7 +72,8 @@ const StudentList: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="main-content" style={{ maxHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-white flex items-center">
@@ -197,6 +198,7 @@ const StudentList: React.FC = () => {
           <p className="text-gray-400 text-lg">No students found</p>
         </div>
       )}
+      </div>
     </div>
   );
 };

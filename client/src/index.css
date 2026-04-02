@@ -89,68 +89,124 @@ body {
   transform: translateY(-3px);
 }
 
-/* Navigation styles */
+/* Navigation styles - Compact Dark Sidebar */
 .sidebar-nav {
   position: fixed;
   left: 0;
   top: 0;
-  width: 280px;
+  width: 70px;
   height: 100vh;
-  background: linear-gradient(145deg, rgb(252, 94, 3), rgb(230, 85, 3));
+  background: linear-gradient(180deg, #1a1a1a, #0d0d0d);
   backdrop-filter: blur(20px);
-  border-radius: 0 24px 24px 0;
+  border-radius: 0;
   box-shadow: 
-    4px 0 16px rgba(252, 94, 3, 0.3),
-    2px 0 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 2px rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-left: none;
+    4px 0 16px rgba(0, 0, 0, 0.5),
+    2px 0 8px rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   z-index: 100;
   overflow-y: auto;
   overflow-x: hidden;
+  transition: width 0.3s ease;
+}
+
+.sidebar-nav:hover {
+  width: 240px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.nav-logo:hover {
+  background: rgba(252, 94, 3, 0.1);
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+}
+
+.logo-text {
+  display: none;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+
+.sidebar-nav:hover .logo-text {
+  display: block;
+}
+
+.logo-text h2 {
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(252, 94, 3);
+  margin: 0;
+}
+
+.logo-text p {
+  font-size: 10px;
+  color: #808080;
+  margin: 2px 0 0 0;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 16px 24px;
-  margin: 4px 16px;
-  border-radius: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  padding: 14px 18px;
+  margin: 6px 10px;
+  border-radius: 12px;
+  color: #b0b0b0;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
+}
+
+.nav-item span {
+  display: none;
+  margin-left: 16px;
+}
+
+.sidebar-nav:hover .nav-item span {
+  display: inline;
 }
 
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: rgba(252, 94, 3, 0.15);
+  color: rgb(252, 94, 3);
   transform: translateX(4px);
   box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(252, 94, 3, 0.1);
 }
 
 .nav-item.active {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: linear-gradient(135deg, rgba(252, 94, 3, 0.2), rgba(252, 94, 3, 0.1));
+  color: rgb(252, 94, 3);
   box-shadow: 
-    0 6px 12px rgba(0, 0, 0, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.25);
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(252, 94, 3, 0.2);
 }
 
 .nav-item.active::before {
   content: '';
   position: absolute;
-  left: 8px;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  background: #ffffff;
-  border-radius: 50%;
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+  width: 4px;
+  height: 60%;
+  background: rgb(252, 94, 3);
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 8px rgba(252, 94, 3, 0.6);
 }
 
 /* App container */
@@ -164,12 +220,19 @@ body {
 /* Main content area */
 .main-content {
   position: relative;
-  margin-left: 280px;
+  margin-left: 70px;
   min-height: 100vh;
   padding: 32px;
   background: var(--bg-primary);
-  width: calc(100% - 280px);
+  width: calc(100% - 70px);
   box-sizing: border-box;
+  transition: all 0.3s ease;
+  scroll-behavior: smooth;
+}
+
+.sidebar-nav:hover ~ .main-content {
+  margin-left: 240px;
+  width: calc(100% - 240px);
 }
 
 /* Mobile responsive adjustments */
@@ -292,6 +355,24 @@ body {
 
 .clay-input::placeholder {
   color: var(--text-tertiary);
+}
+
+/* Dropdown/Select styling - Fix white on white issue */
+select.clay-input,
+select option {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+select option {
+  background: #2d2d2d !important;
+  color: #ffffff !important;
+  padding: 10px;
+}
+
+select:focus {
+  outline: none !important;
+  border-color: rgb(252, 94, 3) !important;
 }
 
 /* Custom scrollbar */

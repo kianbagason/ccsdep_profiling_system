@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Search, Filter, Mail, Phone, MapPin, GraduationCap } from 'lucide-react';
+import { Users, Search, Filter, Mail, Phone, MapPin, GraduationCap, Plus, Edit, Trash2 } from 'lucide-react';
 
 interface Faculty {
   _id: string;
@@ -44,6 +44,17 @@ const FacultyList: React.FC = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this faculty?')) {
+      try {
+        await fetch(`/api/faculty/${id}`, { method: 'DELETE' });
+        setFaculty(faculty.filter(member => member._id !== id));
+      } catch (error) {
+        console.error('Error deleting faculty:', error);
+      }
+    }
+  };
+
   const filteredFaculty = faculty.filter(member =>
     `${member.personalInfo.firstName} ${member.personalInfo.lastName} ${member.employmentDetails.department}`.toLowerCase()
       .includes(searchTerm.toLowerCase())
@@ -60,8 +71,17 @@ const FacultyList: React.FC = () => {
   }
 
   return (
-    <div className="main-content">
-      <h1 className="text-3xl font-bold text-white mb-8">Faculty Information</h1>
+    <div className="main-content" style={{ maxHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-white">Faculty Information</h1>
+        <button
+          onClick={() => window.location.href = '/faculty/add'}
+          className="ccs-orange-btn flex items-center gap-2"
+        >
+          <Plus size={20} />
+          Add Faculty
+        </button>
+      </div>
       
       {/* Search and Filter */}
       <div className="clay-card p-6 mb-8">
@@ -132,11 +152,19 @@ const FacultyList: React.FC = () => {
             </div>
 
             <div className="mt-6 flex gap-2">
-              <button className="ccs-orange-btn text-sm px-4 py-2">
-                View Profile
+              <button 
+                onClick={() => window.location.href = `/faculty/edit/${member._id}`}
+                className="p-2 bg-green-500 bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
+                title="Edit"
+              >
+                <Edit size={16} className="text-green-400" />
               </button>
-              <button className="clay-card text-sm px-4 py-2 text-gray-300 hover:text-white">
-                Edit
+              <button 
+                onClick={() => handleDelete(member._id)}
+                className="p-2 bg-red-500 bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
+                title="Delete"
+              >
+                <Trash2 size={16} className="text-red-400" />
               </button>
             </div>
           </div>

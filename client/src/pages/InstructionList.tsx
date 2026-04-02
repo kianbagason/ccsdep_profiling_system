@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Search, Filter, FileText, Calendar, User, Award } from 'lucide-react';
+import { BookOpen, Search, Filter, FileText, Calendar, User, Award, Plus, Edit, Trash2 } from 'lucide-react';
 
 interface Instruction {
   _id: string;
@@ -47,6 +47,17 @@ const InstructionList: React.FC = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this instruction?')) {
+      try {
+        await fetch(`/api/instruction/${id}`, { method: 'DELETE' });
+        setInstruction(instruction.filter(item => item._id !== id));
+      } catch (error) {
+        console.error('Error deleting instruction:', error);
+      }
+    }
+  };
+
   const filteredInstruction = instruction.filter(item => {
     const matchesSearch = `${item.title} ${item.courseCode} ${item.author} ${item.department}`.toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -65,8 +76,17 @@ const InstructionList: React.FC = () => {
   }
 
   return (
-    <div className="main-content">
-      <h1 className="text-3xl font-bold text-white mb-8">Instructional Materials</h1>
+    <div className="main-content" style={{ maxHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-white">Instructional Materials</h1>
+        <button
+          onClick={() => window.location.href = '/instruction/add'}
+          className="ccs-orange-btn flex items-center gap-2"
+        >
+          <Plus size={20} />
+          Add Instruction
+        </button>
+      </div>
       
       {/* Search and Filter */}
       <div className="clay-card p-6 mb-8">
@@ -176,11 +196,19 @@ const InstructionList: React.FC = () => {
             )}
 
             <div className="flex gap-2">
-              <button className="ccs-orange-btn text-sm px-4 py-2">
-                View Details
+              <button 
+                onClick={() => window.location.href = `/instruction/edit/${item._id}`}
+                className="p-2 bg-green-500 bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
+                title="Edit"
+              >
+                <Edit size={16} className="text-green-400" />
               </button>
-              <button className="clay-card text-sm px-4 py-2 text-gray-300 hover:text-white">
-                Download
+              <button 
+                onClick={() => handleDelete(item._id)}
+                className="p-2 bg-red-500 bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
+                title="Delete"
+              >
+                <Trash2 size={16} className="text-red-400" />
               </button>
             </div>
           </div>

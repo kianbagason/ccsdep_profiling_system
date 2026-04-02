@@ -8,43 +8,43 @@ const personalInfoSchema = new mongoose.Schema({
   birthDate: { type: Date, required: true },
   age: { type: Number },
   gender: { type: String, enum: ['Male', 'Female', 'Other'], required: true },
-  civilStatus: { type: String, enum: ['Single', 'Married', 'Divorced', 'Widowed'], required: true },
-  citizenship: { type: String, required: true },
+  civilStatus: { type: String, enum: ['Single', 'Married', 'Divorced', 'Widowed'], required: false },
+  citizenship: { type: String, required: false },
   religion: { type: String },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
   address: {
-    street: { type: String, required: true },
-    barangay: { type: String, required: true },
-    city: { type: String, required: true },
-    province: { type: String, required: true },
-    zipCode: { type: String, required: true }
+    street: { type: String, required: false },
+    barangay: { type: String, required: false },
+    city: { type: String, required: false },
+    province: { type: String, required: false },
+    zipCode: { type: String, required: false }
   },
   emergencyContact: {
-    name: { type: String, required: true },
-    relationship: { type: String, required: true },
-    phone: { type: String, required: true }
+    name: { type: String, required: false },
+    relationship: { type: String, required: false },
+    phone: { type: String, required: false }
   }
 });
 
 const academicHistorySchema = new mongoose.Schema({
   elementary: {
-    schoolName: { type: String, required: true },
-    address: { type: String, required: true },
-    yearGraduated: { type: Number, required: true },
+    schoolName: { type: String, required: false },
+    address: { type: String, required: false },
+    yearGraduated: { type: Number, required: false },
     honors: { type: String }
   },
   juniorHigh: {
-    schoolName: { type: String, required: true },
-    address: { type: String, required: true },
-    yearGraduated: { type: Number, required: true },
+    schoolName: { type: String, required: false },
+    address: { type: String, required: false },
+    yearGraduated: { type: Number, required: false },
     honors: { type: String }
   },
   seniorHigh: {
-    schoolName: { type: String, required: true },
-    address: { type: String, required: true },
-    strand: { type: String, required: true },
-    yearGraduated: { type: Number, required: true },
+    schoolName: { type: String, required: false },
+    address: { type: String, required: false },
+    strand: { type: String, required: false },
+    yearGraduated: { type: Number, required: false },
     honors: { type: String }
   },
   college: {
@@ -70,13 +70,13 @@ const currentEnrollmentSchema = new mongoose.Schema({
     message: 'Student ID must be exactly 7 digits (e.g., 2203334)'
   }
 },
-  program: { type: String, required: true },
+  program: { type: String, required: false },
   major: { type: String },
-  yearLevel: { type: Number, required: true },
-  section: { type: String, required: true },
-  semester: { type: String, required: true },
-  academicYear: { type: String, required: true },
-  enrollmentStatus: { type: String, enum: ['Regular', 'Irregular', 'Transferee', 'Returnee'], required: true },
+  yearLevel: { type: Number, required: false },
+  section: { type: String, required: false },
+  semester: { type: String, required: false },
+  academicYear: { type: String, required: false },
+  enrollmentStatus: { type: String, enum: ['Regular', 'Irregular', 'Transferee', 'Returnee'], required: false },
   scholarship: { type: String },
   adviser: { type: String }
 });
@@ -167,7 +167,7 @@ const affiliationsSchema = new mongoose.Schema({
 });
 
 const medicalInfoSchema = new mongoose.Schema({
-  bloodType: { type: String, enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] },
+  bloodType: { type: String, enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', ''] },
   allergies: [{ type: String }],
   medicalConditions: [{ type: String }],
   medications: [{ type: String }],

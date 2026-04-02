@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Search, Filter, Clock, MapPin, Users, User, BookOpen } from 'lucide-react';
+import { Calendar, Search, Filter, Clock, MapPin, Users, User, BookOpen, Plus, Edit, Trash2 } from 'lucide-react';
 
 interface Schedule {
   _id: string;
@@ -64,6 +64,17 @@ const ScheduleList: React.FC = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this schedule?')) {
+      try {
+        await fetch(`/api/scheduling/${id}`, { method: 'DELETE' });
+        setSchedules(schedules.filter(schedule => schedule._id !== id));
+      } catch (error) {
+        console.error('Error deleting schedule:', error);
+      }
+    }
+  };
+
   const filteredSchedules = schedules.filter(schedule => {
     const matchesSearch = `${schedule.course.code} ${schedule.course.title} ${schedule.faculty.name} ${schedule.section}`.toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -91,8 +102,17 @@ const ScheduleList: React.FC = () => {
   }
 
   return (
-    <div className="main-content">
-      <h1 className="text-3xl font-bold text-white mb-8">Course Schedules</h1>
+    <div className="main-content" style={{ maxHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-white">Course Schedules</h1>
+        <button
+          onClick={() => window.location.href = '/schedule/add'}
+          className="ccs-orange-btn flex items-center gap-2"
+        >
+          <Plus size={20} />
+          Add Schedule
+        </button>
+      </div>
       
       {/* Search and Filter */}
       <div className="clay-card p-6 mb-8">
@@ -189,11 +209,19 @@ const ScheduleList: React.FC = () => {
             </div>
 
             <div className="mt-4 flex gap-2">
-              <button className="ccs-orange-btn text-sm px-4 py-2">
-                View Details
+              <button 
+                onClick={() => window.location.href = `/schedule/edit/${schedule._id}`}
+                className="p-2 bg-green-500 bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
+                title="Edit"
+              >
+                <Edit size={16} className="text-green-400" />
               </button>
-              <button className="clay-card text-sm px-4 py-2 text-gray-300 hover:text-white">
-                Edit
+              <button 
+                onClick={() => handleDelete(schedule._id)}
+                className="p-2 bg-red-500 bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
+                title="Delete"
+              >
+                <Trash2 size={16} className="text-red-400" />
               </button>
             </div>
           </div>
