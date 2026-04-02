@@ -5,5 +5,16 @@
   },
   "installCommand": "cd client && npm install --legacy-peer-deps",
   "buildCommand": "cd client && npm run build",
-  "outputDirectory": "client/build"
+  "outputDirectory": "client/build",
+  "public": true,
+  "rewrites": [
+    {
+      "source": "/static/(.*)",
+      "destination": "/static/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  ]
 }
