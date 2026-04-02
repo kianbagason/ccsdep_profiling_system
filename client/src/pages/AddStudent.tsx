@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 
 const AddStudent: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -32,56 +33,45 @@ const AddStudent: React.FC = () => {
     setMessage('');
 
     try {
-      const response = await fetch('/api/students', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      await api.post('/students', {
+        personalInfo: formData,
+        academicHistory: {
+          elementary: { schoolName: '', address: '', yearGraduated: '', honors: '' },
+          juniorHigh: { schoolName: '', address: '', yearGraduated: '', honors: '' },
+          seniorHigh: { schoolName: '', address: '', strand: '', yearGraduated: '', honors: '' },
+          college: { schoolName: '', degree: '', course: '', yearLevel: '', expectedGraduation: '', gwa: '', honors: '' }
         },
-        body: JSON.stringify({
-          personalInfo: formData,
-          academicHistory: {
-            elementary: { schoolName: '', address: '', yearGraduated: '', honors: '' },
-            juniorHigh: { schoolName: '', address: '', yearGraduated: '', honors: '' },
-            seniorHigh: { schoolName: '', address: '', strand: '', yearGraduated: '', honors: '' },
-            college: { schoolName: '', degree: '', course: '', yearLevel: '', expectedGraduation: '', gwa: '', honors: '' }
-          },
-          currentEnrollment: {
-            studentId: Math.floor(1000000 + Math.random() * 9000000).toString(),
-            program: 'BSIT',
-            major: '',
-            yearLevel: 1,
-            section: 'A',
-            semester: 'First Semester',
-            academicYear: '2024-2025',
-            enrollmentStatus: 'Regular',
-            scholarship: '',
-            adviser: ''
-          },
-          nonAcademicActivities: { sports: [], arts: [], leadership: [], communityService: [] },
-          violations: { disciplinaryRecords: [] },
-          skills: { technicalSkills: [], softSkills: [], languages: [] },
-          affiliations: { organizations: [], sportsTeams: [], clubs: [] },
-          medicalInfo: { bloodType: '', allergies: [], medicalConditions: [], medications: [], physician: { name: '', contact: '' }, hospital: { name: '', address: '' } }
-        }),
+        currentEnrollment: {
+          studentId: Math.floor(1000000 + Math.random() * 9000000).toString(),
+          program: 'BSIT',
+          major: '',
+          yearLevel: 1,
+          section: 'A',
+          semester: 'First Semester',
+          academicYear: '2024-2025',
+          enrollmentStatus: 'Regular',
+          scholarship: '',
+          adviser: ''
+        },
+        nonAcademicActivities: { sports: [], arts: [], leadership: [], communityService: [] },
+        violations: { disciplinaryRecords: [] },
+        skills: { technicalSkills: [], softSkills: [], languages: [] },
+        affiliations: { organizations: [], sportsTeams: [], clubs: [] },
+        medicalInfo: { bloodType: '', allergies: [], medicalConditions: [], medications: [], physician: { name: '', contact: '' }, hospital: { name: '', address: '' } }
       });
 
-      if (response.ok) {
-        setMessage('Student added successfully!');
-        // Scroll to top to see success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setFormData({
-          firstName: '',
-          lastName: '',
-          middleName: '',
-          birthDate: '',
-          gender: '',
-          email: '',
-          phone: ''
-        });
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-      }
+      setMessage('Student added successfully!');
+      // Scroll to top to see success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setFormData({
+        firstName: '',
+        lastName: '',
+        middleName: '',
+        birthDate: '',
+        gender: '',
+        email: '',
+        phone: ''
+      });
     } catch (error) {
       setMessage('Error adding student. Please try again.');
     } finally {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const EditEvent: React.FC = () => {
@@ -33,8 +34,7 @@ const EditEvent: React.FC = () => {
 
   const fetchEvent = async () => {
     try {
-      const response = await fetch(`/api/events/${id}`);
-      const data = await response.json();
+      const data = await api.get(`/events/${id}`);
       
       if (data) {
         setFormData({
@@ -139,25 +139,14 @@ const EditEvent: React.FC = () => {
         socialMedia: {}
       };
 
-      const response = await fetch(`/api/events/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventData),
-      });
+      await api.put(`/events/${id}`, eventData);
 
-      if (response.ok) {
-        setMessage('Event updated successfully!');
-        // Scroll to top to see success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => {
-          navigate('/events');
-        }, 1500);
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-        // Scroll to top to see error message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      setMessage('Event updated successfully!');
+      // Scroll to top to see success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        navigate('/events');
+      }, 1500);
     } catch (error) {
       setMessage('Error updating event. Please try again.');
       // Scroll to top to see error message

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const EditSchedule: React.FC = () => {
@@ -37,8 +38,7 @@ const EditSchedule: React.FC = () => {
 
   const fetchSchedule = async () => {
     try {
-      const response = await fetch(`/api/scheduling/${id}`);
-      const data = await response.json();
+      const data = await api.get(`/scheduling/${id}`);
       
       if (data) {
         setFormData({
@@ -137,21 +137,11 @@ const EditSchedule: React.FC = () => {
         remarks: ''
       };
 
-      const response = await fetch(`/api/scheduling/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(scheduleData),
-      });
+      await api.put(`/scheduling/${id}`, scheduleData);
 
-      if (response.ok) {
-        setMessage('Schedule updated successfully!');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => navigate('/schedule'), 1500);
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      setMessage('Schedule updated successfully!');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => navigate('/schedule'), 1500);
     } catch (error) {
       setMessage('Error updating schedule. Please try again.');
       window.scrollTo({ top: 0, behavior: 'smooth' });

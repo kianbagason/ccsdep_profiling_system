@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const EditFaculty: React.FC = () => {
@@ -34,8 +35,7 @@ const EditFaculty: React.FC = () => {
 
   const fetchFaculty = async () => {
     try {
-      const response = await fetch(`/api/faculty/${id}`);
-      const data = await response.json();
+      const data = await api.get(`/faculty/${id}`);
       
       if (data.personalInfo && data.employmentDetails) {
         setFormData({
@@ -124,27 +124,14 @@ const EditFaculty: React.FC = () => {
         profilePicture: ''
       };
 
-      const response = await fetch(`/api/faculty/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(facultyData),
-      });
+      await api.put(`/faculty/${id}`, facultyData);
 
-      if (response.ok) {
-        setMessage('Faculty updated successfully!');
-        // Scroll to top to see success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => {
-          navigate('/faculty');
-        }, 1500);
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-        // Scroll to top to see error message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      setMessage('Faculty updated successfully!');
+      // Scroll to top to see success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        navigate('/faculty');
+      }, 1500);
     } catch (error) {
       setMessage('Error updating faculty. Please try again.');
       // Scroll to top to see error message

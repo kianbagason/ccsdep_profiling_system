@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 import { useNavigate } from 'react-router-dom';
 
 const AddInstruction: React.FC = () => {
@@ -82,21 +83,11 @@ const AddInstruction: React.FC = () => {
         }
       };
 
-      const response = await fetch('/api/instruction', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(instructionData),
-      });
+      await api.post('/instruction', instructionData);
 
-      if (response.ok) {
-        setMessage('Instruction added successfully!');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => navigate('/instruction'), 1500);
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      setMessage('Instruction added successfully!');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => navigate('/instruction'), 1500);
     } catch (error) {
       setMessage('Error adding instruction. Please try again.');
       window.scrollTo({ top: 0, behavior: 'smooth' });

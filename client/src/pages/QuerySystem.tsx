@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Users, X, ChevronDown } from 'lucide-react';
+import { api } from '../services/apiService';
 
 interface Student {
   _id: string;
@@ -67,21 +68,16 @@ const QuerySystem: React.FC = () => {
   const fetchFilterOptions = async () => {
     try {
       const [skillsRes, sportsRes, orgsRes, programsRes] = await Promise.all([
-        fetch('/api/query/filters/skills'),
-        fetch('/api/query/filters/sports'),
-        fetch('/api/query/filters/organizations'),
-        fetch('/api/query/filters/programs')
+        api.get('/query/filters/skills'),
+        api.get('/query/filters/sports'),
+        api.get('/query/filters/organizations'),
+        api.get('/query/filters/programs')
       ]);
 
-      const skillsData = await skillsRes.json();
-      const sportsData = await sportsRes.json();
-      const orgsData = await orgsRes.json();
-      const programsData = await programsRes.json();
-
-      setAvailableSkills(skillsData.data || []);
-      setAvailableSports(sportsData.data || []);
-      setAvailableOrganizations(orgsData.data || []);
-      setAvailablePrograms(programsData.data || []);
+      setAvailableSkills(skillsRes.data || []);
+      setAvailableSports(sportsRes.data || []);
+      setAvailableOrganizations(orgsRes.data || []);
+      setAvailablePrograms(programsRes.data || []);
     } catch (error) {
       console.error('Error fetching filter options:', error);
     }
@@ -90,8 +86,7 @@ const QuerySystem: React.FC = () => {
   const fetchAllStudents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/students');
-      const data = await response.json();
+      const data = await api.get('/students');
       setStudents(data);
     } catch (error) {
       console.error('Error fetching students:', error);

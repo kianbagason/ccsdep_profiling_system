@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 import { useNavigate } from 'react-router-dom';
 
 const AddEvent: React.FC = () => {
@@ -101,23 +102,12 @@ const AddEvent: React.FC = () => {
         socialMedia: {}
       };
 
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventData),
-      });
+      await api.post('/events', eventData);
 
-      if (response.ok) {
-        setMessage('Event added successfully!');
-        // Scroll to top to see success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => navigate('/events'), 1500);
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-        // Scroll to top to see error message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      setMessage('Event added successfully!');
+      // Scroll to top to see success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => navigate('/events'), 1500);
     } catch (error) {
       setMessage('Error adding event. Please try again.');
       // Scroll to top to see error message

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Plus, Search, Edit, Trash2, Eye, Filter } from 'lucide-react';
+import { api } from '../services/apiService';
 
 interface Student {
   _id: string;
@@ -30,8 +31,7 @@ const StudentList: React.FC = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch('/api/students');
-      const data = await response.json();
+      const data = await api.get('/students');
       setStudents(data);
     } catch (error) {
       console.error('Error fetching students:', error);
@@ -43,7 +43,7 @@ const StudentList: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this student?')) {
       try {
-        await fetch(`/api/students/${id}`, { method: 'DELETE' });
+        await api.delete(`/students/${id}`);
         setStudents(students.filter(student => student._id !== id));
       } catch (error) {
         console.error('Error deleting student:', error);

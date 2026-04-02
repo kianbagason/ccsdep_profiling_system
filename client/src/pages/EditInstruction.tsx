@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const EditInstruction: React.FC = () => {
@@ -31,8 +32,7 @@ const EditInstruction: React.FC = () => {
 
   const fetchInstruction = async () => {
     try {
-      const response = await fetch(`/api/instruction/${id}`);
-      const data = await response.json();
+      const data = await api.get(`/instruction/${id}`);
       
       if (data) {
         setFormData({
@@ -119,21 +119,11 @@ const EditInstruction: React.FC = () => {
         }
       };
 
-      const response = await fetch(`/api/instruction/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(instructionData),
-      });
+      await api.put(`/instruction/${id}`, instructionData);
 
-      if (response.ok) {
-        setMessage('Instruction updated successfully!');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => navigate('/instruction'), 1500);
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      setMessage('Instruction updated successfully!');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => navigate('/instruction'), 1500);
     } catch (error) {
       setMessage('Error updating instruction. Please try again.');
       window.scrollTo({ top: 0, behavior: 'smooth' });

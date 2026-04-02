@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Users, UserPlus, BookOpen, TrendingUp, Award } from 'lucide-react';
+import { api } from '../services/apiService';
 
 interface DashboardStats {
   totalStudents: number;
@@ -30,8 +31,7 @@ const Dashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       // Fetch students data
-      const studentsResponse = await fetch('/api/students');
-      const students = await studentsResponse.json();
+      const students = await api.get('/students');
       
       // Calculate stats
       const programDistribution: { [key: string]: number } = {};

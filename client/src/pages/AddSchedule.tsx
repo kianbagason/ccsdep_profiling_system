@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 import { useNavigate } from 'react-router-dom';
 
 const AddSchedule: React.FC = () => {
@@ -96,23 +97,12 @@ const AddSchedule: React.FC = () => {
         remarks: ''
       };
 
-      const response = await fetch('/api/scheduling', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(scheduleData),
-      });
+      await api.post('/scheduling', scheduleData);
 
-      if (response.ok) {
-        setMessage('Schedule added successfully!');
-        // Scroll to top to see success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => navigate('/schedule'), 1500);
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-        // Scroll to top to see error message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      setMessage('Schedule added successfully!');
+      // Scroll to top to see success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => navigate('/schedule'), 1500);
     } catch (error) {
       setMessage('Error adding schedule. Please try again.');
       // Scroll to top to see error message

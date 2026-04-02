@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Search, Filter, Clock, MapPin, Users, User, BookOpen, Plus, Edit, Trash2 } from 'lucide-react';
+import { api } from '../services/apiService';
 
 interface Schedule {
   _id: string;
@@ -54,8 +55,7 @@ const ScheduleList: React.FC = () => {
 
   const fetchSchedules = async () => {
     try {
-      const response = await fetch('/api/scheduling');
-      const data = await response.json();
+      const data = await api.get('/scheduling');
       setSchedules(data);
     } catch (error) {
       console.error('Error fetching schedules:', error);
@@ -67,7 +67,7 @@ const ScheduleList: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this schedule?')) {
       try {
-        await fetch(`/api/scheduling/${id}`, { method: 'DELETE' });
+        await api.delete(`/scheduling/${id}`);
         setSchedules(schedules.filter(schedule => schedule._id !== id));
       } catch (error) {
         console.error('Error deleting schedule:', error);

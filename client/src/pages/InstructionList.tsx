@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Search, Filter, FileText, Calendar, User, Award, Plus, Edit, Trash2 } from 'lucide-react';
+import { api } from '../services/apiService';
 
 interface Instruction {
   _id: string;
@@ -37,8 +38,7 @@ const InstructionList: React.FC = () => {
 
   const fetchInstruction = async () => {
     try {
-      const response = await fetch('/api/instruction');
-      const data = await response.json();
+      const data = await api.get('/instruction');
       setInstruction(data);
     } catch (error) {
       console.error('Error fetching instruction:', error);
@@ -50,7 +50,7 @@ const InstructionList: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this instruction?')) {
       try {
-        await fetch(`/api/instruction/${id}`, { method: 'DELETE' });
+        await api.delete(`/instruction/${id}`);
         setInstruction(instruction.filter(item => item._id !== id));
       } catch (error) {
         console.error('Error deleting instruction:', error);

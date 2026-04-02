@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Search, Filter, Mail, Phone, MapPin, GraduationCap, Plus, Edit, Trash2 } from 'lucide-react';
+import { api } from '../services/apiService';
 
 interface Faculty {
   _id: string;
@@ -34,8 +35,7 @@ const FacultyList: React.FC = () => {
 
   const fetchFaculty = async () => {
     try {
-      const response = await fetch('/api/faculty');
-      const data = await response.json();
+      const data = await api.get('/faculty');
       setFaculty(data);
     } catch (error) {
       console.error('Error fetching faculty:', error);
@@ -47,7 +47,7 @@ const FacultyList: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this faculty?')) {
       try {
-        await fetch(`/api/faculty/${id}`, { method: 'DELETE' });
+        await api.delete(`/faculty/${id}`);
         setFaculty(faculty.filter(member => member._id !== id));
       } catch (error) {
         console.error('Error deleting faculty:', error);

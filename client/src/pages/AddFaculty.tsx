@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Save, X } from 'lucide-react';
+import { api } from '../services/apiService';
 import { useNavigate } from 'react-router-dom';
 
 const AddFaculty: React.FC = () => {
@@ -91,27 +92,14 @@ const AddFaculty: React.FC = () => {
         profilePicture: ''
       };
 
-      const response = await fetch('/api/faculty', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(facultyData),
-      });
+      await api.post('/faculty', facultyData);
 
-      if (response.ok) {
-        setMessage('Faculty added successfully!');
-        // Scroll to top to see success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => {
-          navigate('/faculty');
-        }, 1500);
-      } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
-        // Scroll to top to see error message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      setMessage('Faculty added successfully!');
+      // Scroll to top to see success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        navigate('/faculty');
+      }, 1500);
     } catch (error) {
       setMessage('Error adding faculty. Please try again.');
       // Scroll to top to see error message
